@@ -1,21 +1,13 @@
 import  Router  from "express";
-import Post from "../models/post.js";
+import PostController from "../controllers/PostController.js";
 
 
 const router = new Router();
 
-router.post('/post', async (req, res) => {
-    try { 
-    const {author, title, content, picture} = req.body
-    const post = await Post.create({author, title, content, picture})
-    res.json(post)
-    } catch (error){
-        res.status(500).json(error)
-    }
-});
-router.get('/posts');
-router.get('/posts/:id');
-router.put('/posts');
-router.delete('/posts/:id');
+router.post('/post', PostController.create);
+router.get('/posts', PostController.getAll);
+router.get('/posts/:id', PostController.getOne);
+router.put('/posts', PostController.update);
+router.delete('/posts/:id', PostController.delete);
 
 export default router;
