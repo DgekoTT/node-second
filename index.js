@@ -1,5 +1,6 @@
 import express from 'express'
 import mongoose from 'mongoose'
+import Post from './models/post.js'
 
 const PORT = 3000;
 
@@ -7,11 +8,25 @@ const app = express();
 
 app.use(express.json());
 
-const db_url = 'mongodb+srv://Dgeko:frGGT1@#4@cluster0.5rbuesr.mongodb.net/?retryWrites=true&w=majority'
+const db_url = 'mongodb+srv://Dgeko:frGGT14@cluster0.5rbuesr.mongodb.net/node-second?retryWrites=true&w=majority'
 
-app.post('/', (req, res) => {
-    console.log(req.body);
-    res.status(200).json('Сервер в работе ');
+app.post('/', async (req, res) => {
+    try { 
+    const {author, title, content, picture} = req.body
+    const post = await Post.create({author, title, content, picture})
+    res.json(post);
+    } catch (error){
+        res.status(500).json(error)
+    }
 });
 
-app.listen(PORT, () => console.log('server started on PORT ' + PORT));
+async function startApp() {
+    try {
+        await mongoose.connect(db_url)
+        app.listen(PORT, () => console.log('server started on PORT ' + PORT));
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+startApp();
