@@ -21,7 +21,11 @@ class PostController {
     }
     async getOne(req, res) {
         try {
-            const post = Post.findById(req.params.id);
+            const {id} = req.params;
+            if (!id){
+                res.status(400).json({message: 'id не указан'})
+            }
+            const post = await Post.findById(id);
             return res.json(post);
         } catch (error){
             res.status(500).json(error)
@@ -29,15 +33,23 @@ class PostController {
     }
     async update(req, res) {
         try {
-            const post = Post.findByIdAndUpdate(req.id);
-            return res.json(post);
-        } catch (error){
+            const post = req.body;
+            if (!post._id) {
+                res.status(400).json({message: 'id не указан'})
+            }
+            const updatedPost = await Post.findByIdAndUpdate(post._id, post, {new: true});
+            return res.json(updatedPost);
+        } catch (error) {
             res.status(500).json(error)
         }
     }
     async delete(req, res) {
         try {
-            const post = Post.findByIdAndDelete(req.id);
+            const {id} = req.params
+            if (!id){
+                res.status(400).json({message: 'id не указан'})
+            }
+            const post = await Post.findByIdAndDelete(id);
             return res.json(post);
         } catch (error){
             res.status(500).json(error)
