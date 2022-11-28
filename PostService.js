@@ -1,8 +1,10 @@
 import post from "./models/post.js";
+import fileService from "./fileService.js";
 
 class PostService{
-    async create(newE) { 
-        const createPost = await post.create(newE)
+    async create(newE, picture) {
+        const  fileName = fileService.saveFile(picture);
+        const createPost = await post.create({...newE, picture: fileName});
         return createPost;
         } 
     
